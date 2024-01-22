@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="info"></div>
+
+
+    <script type="module">
+        import {f1} from './func.js'
+
+        document.querySelector('#info').innerHTML = f1(9);
+    </script> 
+    <script type="module">
+        // console.log(f1);  //看不到另外一個 module裡的參數
+    </script> 
+</body>
+</html>

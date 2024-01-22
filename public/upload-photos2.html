@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/fontawesome/css/all.css">
+    <title>Document</title>
+    <style>
+        .imgUnit{
+            display: inline-block;
+            width: 250px;
+            position: relative;
+
+        }
+
+        .imgUnit>img {
+            width: 100%;
+        }
+
+        .imgUnit>.del {
+            font-size:  xx-large;
+            position: absolute;
+            right: 0;
+            top: 0;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <!-- type屬性值為text 會從req.body 中獲得
+    type屬性值為file 會從req.files 中獲得 -->
+    <form name="form1" onsubmit="sendData(event)">
+        <input type="text" name="testFiled1" value="測試">
+        <br>
+        <input type="file" name="photos" multiple accept="image/jpeg,image/png">
+        <br>
+        <input type="submit">
+    </form>
+<!--
+    <div id="imgContainer">
+        <div class="imgUnit">
+            <div class="del"><i class="fa-solid fa-circle-xmark"></i></div>
+            <img src="/uploads/54879533-5e29-4a3f-a272-4c6ab78764e0.jpg" alt="">
+        </div>
+    </div>
+-->
+    <div id="imgContainer"></div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script>
+        let imgData = [];
+        const imgContainer = $('#imgContainer');
+
+        async function sendData(event){
+            event.preventDefault();  
+
+            const fd = new FormData(document.form1);
+
+            const data = await fetch('/try-uploads',{
+                method: 'POST',
+                body: fd
+            }).then(r=>r.json());
+
+            // html 得到  renderImgs(data.files); return的值
+            // data.files;當input元素中的type屬性值為file，他才會有files的這個屬性
+            console.log(data);
+            const html = renderImgs(data.files);
+
+            imgContainer.append(html);
+
+        }
+
+        function renderImgs(imgData){
+            return imgData.map(el=>{
+                return `          
+                <div class="imgUnit" data-id="${el.filename}">
+                    <div class="del" onclick="removeItem(event)"><i class="fa-solid fa-circle-xmark"></i></div>
+                    <img src="/uploads/${el.filename}" alt="">
+                </div>
+                `;
+            }).join('')
+        }
+
+        // 當觸發元素內onclick 行內事件時觸發
+        function removeItem(imgData) {
+            $(event.currentTarget).closest('.imgUnit').remove();
+        }
+
+        //  $('.imgUnit', imgContainer) ; 從 imgContainer 裡面去找.imgUnit
+        function getData(){
+            let data = [];
+            $('.imgUnit', imgContainer).each(function(){
+                data.push($(this).attr('data-id'));
+            })
+            console.log(data);
+            return data;
+        }
+
+    </script>
+</body>
+</html>

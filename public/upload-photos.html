@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/fontawesome/css/all.css">
+    <title>Document</title>
+    <style>
+        .imgUnit{
+            display: inline-block;
+            width: 250px;
+            position: relative;
+
+        }
+
+        .imgUnit>img {
+            width: 100%;
+        }
+
+        .imgUnit>.del {
+            font-size:  xx-large;
+            position: absolute;
+            right: 0;
+            top: 0;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <form name="form1" onsubmit="sendData(event)">
+        <input type="text" name="testFiled1" value="測試">
+        <br>
+        <input type="file" name="photos" multiple accept="image/jpeg,image/png">
+        <br>
+        <input type="submit">
+    </form>
+<!--
+    <div id="imgContainer">
+        <div class="imgUnit">
+            <div class="del"><i class="fa-solid fa-circle-xmark"></i></div>
+            <img src="/uploads/54879533-5e29-4a3f-a272-4c6ab78764e0.jpg" alt="">
+        </div>
+    </div>
+-->
+    <div id="imgContainer"></div>
+    
+
+    <script>
+        let imgData = [];
+        const imgContainer = document.querySelector('#imgContainer')
+
+        async function sendData(event){
+            // 不要用傳統的表單送出
+            event.preventDefault();  
+            // input type是file時  才會有 files這個屬性，並將內容放在裡面
+            // console.log(document.form1.photos.files);
+
+            // 建立並將表單的資料放入fd的參數位置
+            const fd = new FormData(document.form1);
+
+            const data = await fetch('/try-uploads',{
+                method: 'POST',
+                body: fd
+            }).then(r=>r.json());
+
+            console.log(data);
+            imgData =  [...imgData, ...data.files];
+            renderImgs();
+        }
+
+        // 沒加 .join('') 元素跟元素間會出現 ,  字串
+        // data-id; data- 代表自定義的意思 
+        function renderImgs(){
+            imgContainer.innerHTML = imgData.map(el=>{
+                return `          
+                <div class="imgUnit" data-id="${el.filename}">
+                    <div class="del" onclick="removeItem(event)"><i class="fa-solid fa-circle-xmark"></i></div>
+                    <img src="/uploads/${el.filename}" alt="">
+                </div>
+                `;
+            }).join('')
+        }
+
+        // 當 event.currentTarget 沒有找到東西時會導致系統跳錯
+        //  event.currentTarget?.closest('.imgUnit').getAttribute('data-id') 加上問號 則是當沒有找到東西時會跳出undefined時 就直接跳脫執行函式 如此即就略過跳錯導致系統崩潰的狀況
+        function removeItem(event) {
+            const fname = event.currentTarget.closest('.imgUnit').getAttribute('data-id');
+            console.log({fname});
+
+            imgData = imgData.filter(item=>item.filename!==fname);
+            renderImgs();
+        }
+
+    </script>
+</body>
+</html>

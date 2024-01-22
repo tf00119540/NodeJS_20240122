@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button onclick="sendData()">send</button>
+    <pre id="info"></pre>
+
+    <script>
+        async function sendData(){
+            const r = await fetch('/try-post?a=100', {
+                method: 'POST',
+                body: JSON.stringify({name:'henry', age:30}),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await r.json();
+            console.log(data);
+            info.innerText = JSON.stringify(data, null, 4)
+
+        }
+    </script>
+</body>
+</html>

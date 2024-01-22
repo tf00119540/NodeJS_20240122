@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        function myPromise(str){
+            // 使 rnd 得到0.5秒~1.5秒之間隨機數 
+            const rnd = 500 + Math.floor(Math.random()*1000);
+
+            return new Promise((resolve, reject) => {
+                setTimeout(()=>{
+                    resolve(str + ":" + rnd);
+                }, rnd)
+            })
+        }
+
+        myPromise("a")
+        .then((r)=>{
+            console.log(r);
+            return myPromise("b")
+        })
+        .then((r)=>{
+            console.log(r);
+            return myPromise("b")
+        })
+        .then((r)=>{
+            console.log(r);
+            return myPromise("c")
+        })
+        .then((r)=>{
+            console.log(r);
+            return myPromise("d")
+        });
+
+    </script>
+</body>
+</html>

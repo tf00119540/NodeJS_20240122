@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        function myPromise(str){
+            // 使 rnd 得到0.5秒~1.5秒之間隨機數 
+            const rnd = 500 + Math.floor(Math.random()*1000);
+
+            return new Promise((resolve, reject) => {
+                setTimeout(()=>{
+                    resolve(str + ":" + rnd);
+                }, rnd)
+            })
+        }
+
+        // 如果a0就出錯，但還是會繼續跑a1~a9
+        (async ()=>{
+            for(let i=0; i<10; i++){
+                try {
+                    console.log(await myPromise("a" + i));
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        })();
+        
+        // 如果b0就出錯，迴圈就不繼續執行直接跳到error
+        (async ()=>{
+            try {
+                for (let i = 0; i < 10; i++) {
+                    console.log(await myPromise("b" + i));
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        })();
+
+
+    </script>
+</body>
+</html>

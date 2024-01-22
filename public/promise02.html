@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+       new Promise((resolve, reject) => {
+            setTimeout(()=>{
+                // reject(new Error('發生問題'));
+                resolve([3,4,5])
+            },1000)
+            
+        }).then((param) => {
+            // throw new Error('發生問題2')
+            console.log({param});
+            return new Promise((resolve,reject)=>{
+                setTimeout(()=>{
+                    resolve([7,8,9]);
+                },2000)
+            });
+        }).then((param) => {
+            console.log({ param });
+        }).catch(err =>{
+            console.log({ err });
+        });
+            
+    </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button onclick="loadData()">load data</button>
+    <pre id="info"></pre>
+    
+    
+    <script>
+        async function loadData(){
+            // 會轉成 原生JS的類型 
+            const r = await fetch('http://localhost:3002/address/api');
+            const data = await r.json();
+
+            document.querySelector('#info').innerHTML = JSON.stringify(data, null, 4);
+        }
+    </script>
+</body>
+</html>
